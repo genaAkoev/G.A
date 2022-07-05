@@ -14,7 +14,7 @@
 	<name>telegram-bot</name>
 	<description>Spring project for telegram bot. Author: Akoev Gennadiy</description>
 	<properties>
-		<java.version>18</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
