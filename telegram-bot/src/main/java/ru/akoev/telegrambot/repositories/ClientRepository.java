@@ -6,4 +6,8 @@ import ru.akoev.telegrambot.entities.Client;
 
 @RepositoryRestResource (collectionResourceRel = "clients", path = "clients")
 public interface ClientRepository extends JpaRepository<Client, Long> {
+    Client findByFullName(String fullName);
+
+    @Override
+    Client getById(Long id);
 }
