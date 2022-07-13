@@ -3,12 +3,9 @@ package ru.akoev.telegrambot;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.akoev.telegrambot.entities.Category;
-import ru.akoev.telegrambot.entities.Client;
-import ru.akoev.telegrambot.entities.Product;
-import ru.akoev.telegrambot.repositories.CategoryRepository;
-import ru.akoev.telegrambot.repositories.ClientRepository;
-import ru.akoev.telegrambot.repositories.ProductRepository;
+import ru.akoev.telegrambot.entities.*;
+import ru.akoev.telegrambot.repositories.*;
+
 import java.util.Arrays;
 
 @SpringBootTest
@@ -17,32 +14,39 @@ public class FillingTests {
     private ClientRepository clientRepository;
 
     @Autowired
+    private ClientOrderRepository clientOrderRepository;
+
+    @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private OrderProductRepository orderProductRepository;
+
+
     @Test
     public void createClients(){
-        Client client1 = new Client();
-        client1.setExternalId(1L);
-        client1.setFullName("FullName1");
-        client1.setPhoneNumber("Phone1");
-        client1.setAddress("Address1");
+        Client henryOsbornClient = new Client();
+        henryOsbornClient.setExternalId(1L);
+        henryOsbornClient.setFullName("Henry Osborn");
+        henryOsbornClient.setPhoneNumber("+1(432)54-32-12");
+        henryOsbornClient.setAddress("2719 Grant Street Chandler, TX 75758");
 
-        Client client2 = new Client();
-        client2.setExternalId(2L);
-        client2.setFullName("FullName2");
-        client2.setPhoneNumber("Phone2");
-        client2.setAddress("Address2");
+        Client anthonyRobbinsClient = new Client();
+        anthonyRobbinsClient.setExternalId(2L);
+        anthonyRobbinsClient.setFullName("Anthony Robbins");
+        anthonyRobbinsClient.setPhoneNumber("+1(419)79-91-29");
+        anthonyRobbinsClient.setAddress("1897 Hill Street Bowling Green, OH 43402");
 
-        Client client3 = new Client();
-        client3.setExternalId(3L);
-        client3.setFullName("FullName3");
-        client3.setPhoneNumber("Phone3");
-        client3.setAddress("Address3");
+        Client kevinJacksonClient = new Client();
+        kevinJacksonClient.setExternalId(3L);
+        kevinJacksonClient.setFullName("Kevin Jackson");
+        kevinJacksonClient.setPhoneNumber("502-329-0525");
+        kevinJacksonClient.setAddress("1134 Radford Street Louisville, KY 40242");
 
-        clientRepository.saveAll(Arrays.asList(client1, client2, client3));
+        clientRepository.saveAll(Arrays.asList(henryOsbornClient, anthonyRobbinsClient, kevinJacksonClient));
     }
 
     @Test
@@ -60,7 +64,7 @@ public class FillingTests {
     public void createSubCategories(){
         // NOTICE: Constructor params order: [name: String, parent: Category]
         // Подкатегории "Роллы"
-        Category category = new Category();
+        Category category;
         category = categoryRepository.findByName("Роллы");
         Category classicRolls = new Category("Классические роллы", category);
         Category backedRolls = new Category("Запеченные роллы", category);
@@ -364,4 +368,122 @@ public class FillingTests {
                 dobriy, j7, coffee, beer, stillWater));
 
     }
+
+    @Test
+    public void createClientOrdersAndOrderProducts(){
+        // ЗАКАЗЫ
+        // Заказ 1 от Генри Осборна
+        ClientOrder henryOsbornOrder = new ClientOrder();
+        henryOsbornOrder.setClient(clientRepository.findByFullName("Henry Osborn"));
+        henryOsbornOrder.setStatus(100);
+        henryOsbornOrder.setTotal(938.0);
+
+        // Заказ 1 от Энтони Роббинса
+        ClientOrder anthonyRobbinsOrder = new ClientOrder();
+        anthonyRobbinsOrder.setClient(clientRepository.findByFullName("Anthony Robbins"));
+        anthonyRobbinsOrder.setStatus(100);
+        anthonyRobbinsOrder.setTotal(460.0);
+
+        // Заказ 1 от Кевина Джексона
+        ClientOrder kevinJacksonOrder1 = new ClientOrder();
+        kevinJacksonOrder1.setClient(clientRepository.findByFullName("Kevin Jackson"));
+        kevinJacksonOrder1.setStatus(100);
+        kevinJacksonOrder1.setTotal(1509.0);
+
+        // Заказ 2 от Кевина Джексона
+        ClientOrder kevinJacksonOrder2 = new ClientOrder();
+        kevinJacksonOrder2.setClient(clientRepository.findByFullName("Kevin Jackson"));
+        kevinJacksonOrder2.setStatus(100);
+        kevinJacksonOrder2.setTotal(460.0);
+
+        clientOrderRepository.saveAll(Arrays.asList(henryOsbornOrder, anthonyRobbinsOrder,
+                kevinJacksonOrder1, kevinJacksonOrder2));
+
+
+        // ПОЗИЦИИ В ЗАКАЗЕ
+        // Позиции заказа 1 от Генри Осборна
+        OrderProduct henryOsbornOrder1Product1 = new OrderProduct();
+        henryOsbornOrder1Product1.setClientOrder(henryOsbornOrder);
+        henryOsbornOrder1Product1.setCountProduct(1);
+        henryOsbornOrder1Product1.setProduct(productRepository.findProductByName("Пицца с лососем"));
+
+        OrderProduct henryOsbornOrder1Product2 = new OrderProduct();
+        henryOsbornOrder1Product2.setClientOrder(henryOsbornOrder);
+        henryOsbornOrder1Product2.setCountProduct(1);
+        henryOsbornOrder1Product2.setProduct(productRepository.findProductByName("Пицца \"Азиатский цыпленок\""));
+
+
+        //Позиции заказа 1 от Энтони Роббинса
+        OrderProduct anthonyRobbinsOrder1Product1 = new OrderProduct();
+        anthonyRobbinsOrder1Product1.setClientOrder(anthonyRobbinsOrder);
+        anthonyRobbinsOrder1Product1.setCountProduct(4);
+        anthonyRobbinsOrder1Product1.setProduct(productRepository.findProductByName("Бургер \"ГАМ\""));
+
+
+        // Позиции заказа 1 от Кевина Джексона
+        OrderProduct kevinJacksonOrder1Product1 = new OrderProduct();
+        kevinJacksonOrder1Product1.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product1.setCountProduct(1);
+        kevinJacksonOrder1Product1.setProduct(productRepository.findProductByName("Пицца \"Карбонара\""));
+
+        OrderProduct kevinJacksonOrder1Product2 = new OrderProduct();
+        kevinJacksonOrder1Product2.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product2.setCountProduct(1);
+        kevinJacksonOrder1Product2.setProduct(productRepository.findProductByName("Мак-роллы"));
+
+        OrderProduct kevinJacksonOrder1Product3 = new OrderProduct();
+        kevinJacksonOrder1Product3.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product3.setCountProduct(1);
+        kevinJacksonOrder1Product3.setProduct(productRepository.findProductByName("Филадельфия роллы"));
+
+        OrderProduct kevinJacksonOrder1Product4 = new OrderProduct();
+        kevinJacksonOrder1Product4.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product4.setCountProduct(1);
+        kevinJacksonOrder1Product4.setProduct(productRepository.findProductByName("Калифорния роллы"));
+
+        OrderProduct kevinJacksonOrder1Product5 = new OrderProduct();
+        kevinJacksonOrder1Product5.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product5.setCountProduct(1);
+        kevinJacksonOrder1Product5.setProduct(productRepository.findProductByName("Инь-янь роллы"));
+
+        OrderProduct kevinJacksonOrder1Product6 = new OrderProduct();
+        kevinJacksonOrder1Product6.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product6.setCountProduct(1);
+        kevinJacksonOrder1Product6.setProduct(productRepository.findProductByName("Темпура с курицей"));
+
+        OrderProduct kevinJacksonOrder1Product7 = new OrderProduct();
+        kevinJacksonOrder1Product7.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product7.setCountProduct(1);
+        kevinJacksonOrder1Product7.setProduct(productRepository.findProductByName("Темпура с мидиями"));
+
+        OrderProduct kevinJacksonOrder1Product8 = new OrderProduct();
+        kevinJacksonOrder1Product8.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product8.setCountProduct(1);
+        kevinJacksonOrder1Product8.setProduct(productRepository.findProductByName("Тофу"));
+
+        OrderProduct kevinJacksonOrder1Product9 = new OrderProduct();
+        kevinJacksonOrder1Product9.setClientOrder(kevinJacksonOrder1);
+        kevinJacksonOrder1Product9.setCountProduct(1);
+        kevinJacksonOrder1Product9.setProduct(productRepository.findProductByName("Coca-cola"));
+
+
+        // Позиции заказа 2 от Кевина Джексона
+        OrderProduct kevinJacksonOrder2Product1 = new OrderProduct();
+        kevinJacksonOrder2Product1.setClientOrder(kevinJacksonOrder2);
+        kevinJacksonOrder2Product1.setCountProduct(1);
+        kevinJacksonOrder2Product1.setProduct(productRepository.findProductByName("Темпура с мидиями"));
+
+        OrderProduct kevinJacksonOrder2Product2 = new OrderProduct();
+        kevinJacksonOrder2Product2.setClientOrder(kevinJacksonOrder2);
+        kevinJacksonOrder2Product2.setCountProduct(1);
+        kevinJacksonOrder2Product2.setProduct(productRepository.findProductByName("Мак-роллы"));
+
+        orderProductRepository.saveAll(Arrays.asList(henryOsbornOrder1Product1, henryOsbornOrder1Product2,
+                anthonyRobbinsOrder1Product1, kevinJacksonOrder1Product1, kevinJacksonOrder1Product2,
+                kevinJacksonOrder1Product3, kevinJacksonOrder1Product4, kevinJacksonOrder1Product5,
+                kevinJacksonOrder1Product6, kevinJacksonOrder1Product7, kevinJacksonOrder1Product8,
+                kevinJacksonOrder1Product9, kevinJacksonOrder2Product1, kevinJacksonOrder2Product2));
+    }
+
+
 }

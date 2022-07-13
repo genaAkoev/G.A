@@ -14,15 +14,18 @@ import java.util.List;
 @Service
 @Transactional
 public class EntitiesServiceImpl implements EntitiesService{
-    @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
+    private final ClientOrderRepository clientOrderRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ClientOrderRepository clientOrderRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
-
+    public EntitiesServiceImpl(ClientRepository clientRepository,
+                               ClientOrderRepository clientOrderRepository,
+                               ProductRepository productRepository) {
+        this.clientRepository = clientRepository;
+        this.clientOrderRepository = clientOrderRepository;
+        this.productRepository = productRepository;
+    }
 
     @Override
     public Client getClientByName(String name) {
