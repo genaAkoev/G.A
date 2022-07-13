@@ -19,11 +19,11 @@ public class TelegramBotApplication {
 				URL_CLIENTS = "http://localhost:8080/clients/",
 				URL_H2_CONSOLE = "http://localhost:8080/h2-console/";
 
-		try {
-			Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + URL_CLIENTS);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+//		try {
+//			Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + URL_CLIENTS);
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
 	}
 
 }
