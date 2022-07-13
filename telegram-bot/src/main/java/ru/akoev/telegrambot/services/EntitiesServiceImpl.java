@@ -24,6 +24,14 @@ public class EntitiesServiceImpl implements EntitiesService{
     private ProductRepository productRepository;
 
 
+    public EntitiesServiceImpl(ClientRepository clientRepository,
+                               ClientOrderRepository clientOrderRepository,
+                               ProductRepository productRepository) {
+        this.clientRepository = clientRepository;
+        this.clientOrderRepository = clientOrderRepository;
+        this.productRepository = productRepository;
+    }
+
     @Override
     public Client getClientByName(String name) {
         return clientRepository.findByFullName(name);
